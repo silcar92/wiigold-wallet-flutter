@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "470598196720",
+    "project_id": "wiigold-wallet-staging",
+    "storage_bucket": "wiigold-wallet-staging.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:470598196720:android:5827a000d888d8c20d9135",
+        "android_client_info": {
+          "package_name": "com.wiigold.wallet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAD9DQqBCCaeYRWsFuXE-IEV9LSyjYCC0o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

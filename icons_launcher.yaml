@@ -1,0 +1,15 @@
+icons_launcher:
+  image_path: "assets/images/brand/icons/ic_launcher.png"
+  platforms:
+    android:
+      enable: true
+      image_path: "assets/images/brand/icons/ic_launcher.png"
+      notification_image: "assets/images/brand/ic_foreground.png"
+      adaptive_background_image: "assets/images/brand/ic_background.png"
+      adaptive_foreground_image: "assets/images/brand/ic_foreground.png"
+      adaptive_round_image: "assets/images/brand/icons/ic_launcher.png"
+    ios:
+      enable: true
+      image_path: "assets/images/brand/icons/ic_square_launcher.png"
+      dark_path: "assets/images/brand/icons/ic_square_launcher.png"
+      tinted_path: "assets/images/brand/icons/ic_square_launcher.png"

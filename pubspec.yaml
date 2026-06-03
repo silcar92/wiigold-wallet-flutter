@@ -1,0 +1,95 @@
+name: wiigold
+description: "Flutter project of WiiGold Wallet by Hauv."
+
+publish_to: "none"
+
+version: 0.9.7
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  #> Core flutter packages
+  http: ^1.5.0
+  http_parser: ^4.0.0
+  get: ^4.7.2
+  firebase_core: ^4.0.0
+  firebase_analytics: ^12.0.0
+  firebase_crashlytics: ^5.0.0
+  firebase_messaging: ^16.0.0
+  flutter_local_notifications: ^19.4.0
+
+  #> Core app functions
+  veriff_flutter:
+    path: packages/veriff_flutter
+  
+  #> Theme, icons, images, fonts, animations
+  flutter_svg: ^2.2.0
+  cupertino_icons: ^1.0.8
+  loading_animation_widget: ^1.3.0
+  country_flags: ^3.3.0
+
+  #> Widgets, UI components
+  pinput: ^5.0.1
+  fl_chart: ^1.0.0
+  tab_container: ^3.5.3
+  cherry_toast: ^1.13.0
+  dropdown_button2: ^2.3.9
+  animated_confirm_dialog: ^1.0.2
+  percent_indicator: ^4.2.5
+
+  #> Flutter utilities
+  intl: ^0.20.2
+  app_links: ^6.4.1
+  local_auth: ^2.3.0
+  get_storage: ^2.1.1
+  shared_preferences: ^2.5.3
+  responsive_framework: ^1.5.1
+  flutter_localization: ^0.3.3
+  permission_handler: ^12.0.1
+  qr_flutter: ^4.1.0
+  share_plus: ^11.1.0
+  mobile_scanner: ^7.0.1
+  pretty_qr_code: ^3.5.0
+  image_picker: ^1.2.0
+  file_picker: ^8.0.0
+  url_launcher: ^6.3.2
+  webview_flutter: ^4.10.0
+
+  #> Dart utilities
+  change_app_package_name: ^1.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  #> Launcher tools
+  icons_launcher: ^3.0.1
+  launcher_name: ^1.0.2
+
+  flutter_lints: ^6.0.0
+
+launcher_name:
+  default: "WiiGold"
+  es: "WiiGold"
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: Anuphan
+      fonts:
+        - asset: assets/fonts/Anuphan/Anuphan-Regular.ttf
+        - asset: assets/fonts/Anuphan/Anuphan-Bold.ttf
+          weight: 700
+
+  assets:
+    - assets/
+    - assets/images/icons/
+    - assets/images/brand/
+    - assets/images/brand/logos/
+    - assets/images/brand/icons/
+    - assets/images/brand/splash/
