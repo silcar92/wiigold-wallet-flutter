@@ -10,13 +10,16 @@ import 'package:wiigold/theme/Colors.dart';
 
 // E7 — On-ramp conciliación pendiente (FIAT_CONCILIATION_RUNNING)
 class BuyPendingView extends StatelessWidget {
-  const BuyPendingView({super.key});
+  BuyPendingView({super.key});
+
+  final _isLoading = false.obs;
+  final _showLoader = false.obs;
 
   @override
   Widget build(BuildContext context) {
     return DynamicAppScaffold(
-      isLoading: null,
-      showLoader: null,
+      isLoading: _isLoading,
+      showLoader: _showLoader,
       appBar: DynamicAppBar(
         showLogo: false,
         showActions: false,
@@ -41,6 +44,7 @@ class BuyPendingPage extends StatelessWidget {
     final String amountTokens = args['amount_tokens'] ?? '';
     final String amountUsd = args['amount_usd'] ?? '';
     final String transactionId = args['transaction_id'] ?? '';
+    final bool isFundsHeld = args['status'] == 'funds_held_review';
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -48,24 +52,32 @@ class BuyPendingPage extends StatelessWidget {
       spacing: 16,
       children: [
         Icon(
-          Icons.hourglass_top_rounded,
+          isFundsHeld ? Icons.warning_amber_rounded : Icons.hourglass_top_rounded,
           size: 72,
-          color: AppColors.dark2,
+          color: isFundsHeld ? Colors.orange : AppColors.dark2,
         ),
         DynamicDivider(height: 4),
         Text(
-          'Tu depósito está en proceso',
+          isFundsHeld ? 'Tu depósito está en revisión' : 'Tu depósito está en proceso',
           textAlign: TextAlign.center,
           style: textTheme.displayLarge?.copyWith(height: 1.1),
         ),
         Text(
-          'Recibimos tu solicitud. Estamos validando la recepción y conciliación de los fondos. Te notificaremos cuando el saldo esté disponible.',
+          isFundsHeld
+              ? 'Detectamos una inconsistencia entre la titularidad de la cuenta de origen y tu perfil registrado. Tu operación será revisada antes de continuar.'
+              : 'Recibimos tu solicitud. Estamos validando la recepción y conciliación de los fondos. Te notificaremos cuando el saldo esté disponible.',
           textAlign: TextAlign.center,
           style: textTheme.titleSmall?.copyWith(
             overflow: TextOverflow.visible,
             color: AppColors.dark2,
           ),
         ),
+        if (isFundsHeld)
+          Text(
+            'Si tienes dudas escríbenos a soporte@hauvtrading.com',
+            textAlign: TextAlign.center,
+            style: textTheme.bodySmall?.copyWith(color: AppColors.dark2),
+          ),
         if (amountTokens.isNotEmpty && assetName.isNotEmpty) ...[
           DynamicDivider(height: 4),
           Container(

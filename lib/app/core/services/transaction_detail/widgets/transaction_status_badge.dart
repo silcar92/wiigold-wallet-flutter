@@ -24,6 +24,7 @@ class TransactionStatusBadge extends StatelessWidget {
           "success": 'screens.transaction_status_badge.completed'.tr,
           "pending_execution": 'screens.transaction_status_badge.pending'.tr,
           "pending": 'screens.transaction_status_badge.pending'.tr,
+          "funds_held_review": 'screens.transaction_status_badge.under_review'.tr,
           "failed": 'screens.transaction_status_badge.failed'.tr,
           "rejected": 'screens.transaction_status_badge.failed'.tr,
           "error": 'screens.transaction_status_badge.failed'.tr,
@@ -41,6 +42,8 @@ class TransactionStatusBadge extends StatelessWidget {
       case "pending_execution":
       case "pending":
         return AppColors.accent;
+      case "funds_held_review":
+        return Colors.red;
       case "failed":
       case "rejected":
       case "error":

@@ -368,6 +368,11 @@ class StatusLabelSwitcher extends StatelessWidget {
         statusColor = AppColors.accent;
         statusText = 'home.tab_transactions.status_pending'.tr;
         break;
+      case 'funds_held_review':
+        iconData = Icons.warning_amber_rounded;
+        statusColor = Colors.orange;
+        statusText = 'home.tab_transactions.status_under_review'.tr;
+        break;
       case 'failed':
       case 'rejected':
       case 'error':

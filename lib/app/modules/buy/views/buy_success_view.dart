@@ -11,13 +11,16 @@ import 'package:wiigold/theme/Colors.dart';
 // E6 — On-ramp exitoso (FIAT_AVAILABLE)
 // Pantalla alcanzable desde push notification cuando admin aprueba el depósito.
 class BuySuccessView extends StatelessWidget {
-  const BuySuccessView({super.key});
+  BuySuccessView({super.key});
+
+  final _isLoading = false.obs;
+  final _showLoader = false.obs;
 
   @override
   Widget build(BuildContext context) {
     return DynamicAppScaffold(
-      isLoading: null,
-      showLoader: null,
+      isLoading: _isLoading,
+      showLoader: _showLoader,
       appBar: DynamicAppBar(
         showLogo: false,
         showActions: false,

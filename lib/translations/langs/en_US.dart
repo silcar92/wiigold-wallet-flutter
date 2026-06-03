@@ -237,6 +237,7 @@ const Map<String, String> enUS = {
   'home.tab_transactions.status_completed': 'Completed',
   'home.tab_transactions.status_failed': 'Failed',
   'home.tab_transactions.status_pending': 'Pending',
+  'home.tab_transactions.status_under_review': 'Under Review',
   'home.tab_transactions.status_unknown': 'Unknown',
   'home.tab_transactions.unknown_recipient': 'Unknown recipient',
   'home.transactions_tab_controller.tab_tokens': 'Portfolio',
@@ -873,6 +874,7 @@ const Map<String, String> enUS = {
   'screens.transaction_status_badge.pending': 'Pending',
   'screens.transaction_status_badge.failed': 'Failed',
   'screens.transaction_status_badge.cancelled': 'Cancelled',
+  'screens.transaction_status_badge.under_review': 'Under Review',
   'screens.transaction_status_badge.unknown': 'Unknown',
 
   'screens.transaction_detail.null_transaction': 'Null transaction',

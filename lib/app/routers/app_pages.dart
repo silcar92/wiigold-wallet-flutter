@@ -189,11 +189,11 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.BUY_PENDING,
-      page: () => const BuyPendingView(),
+      page: () => BuyPendingView(),
     ),
     GetPage(
       name: AppRoutes.BUY_SUCCESS,
-      page: () => const BuySuccessView(),
+      page: () => BuySuccessView(),
     ),
 
     //? Home / Token / Sell
