@@ -17,6 +17,7 @@ import 'package:wiigold/app/data/models/response_api_model.dart';
 import 'package:wiigold/app/data/models/responses/balance_model.dart';
 import 'package:wiigold/app/common/widgets/layout/totp_confirm_dialog.dart';
 import 'package:wiigold/app/routers/app_routes.dart';
+import 'package:wiigold/theme/Colors.dart';
 
 //? THEME & IMAGES
 
@@ -38,6 +39,10 @@ class SellController extends GetxController
 
   Timer? _debounceTimer;
   final Duration _debounceDuration = const Duration(milliseconds: 700);
+
+  Timer? _quoteTimer;
+  final RxInt quoteTtl = 0.obs;
+  static const int _quoteDuration = 60;
 
   final RxBool isBlocked = true.obs;
 
@@ -191,11 +196,69 @@ class SellController extends GetxController
           .toHauvNumericString();
 
       isBlocked.value = false;
+      _startQuoteTimer();
     } catch (e) {
       print("Error en getSellComission: $e");
     } finally {
       dismissLoading();
     }
+  }
+
+  void _startQuoteTimer() {
+    _quoteTimer?.cancel();
+    quoteTtl.value = _quoteDuration;
+    _quoteTimer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (quoteTtl.value <= 1) {
+        t.cancel();
+        quoteTtl.value = 0;
+        getSellComission();
+      } else {
+        quoteTtl.value--;
+      }
+    });
+  }
+
+  void _showQuoteExpiredDialog() {
+    final context = Get.context!;
+    final textTheme = Theme.of(context).textTheme;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppColors.dark,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'Cotización vencida',
+          textAlign: TextAlign.center,
+          style: textTheme.titleLarge?.copyWith(color: AppColors.light),
+        ),
+        content: Text(
+          'La cotización venció o ya no está disponible. Solicita una nueva cotización para continuar.',
+          textAlign: TextAlign.center,
+          style: textTheme.bodyMedium?.copyWith(color: AppColors.light),
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+              Get.offAllNamed(AppRoutes.SELL);
+            },
+            child: Text(
+              'Nueva cotización',
+              style: textTheme.titleMedium?.copyWith(color: AppColors.main),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void onClose() {
+    _quoteTimer?.cancel();
+    _debounceTimer?.cancel();
+    super.onClose();
   }
 
   //? sellDataViewForm
@@ -279,8 +342,11 @@ class SellController extends GetxController
 
   void _submitDataSellForm() async {
     dismissLoading();
-
-    Get.toNamed(AppRoutes.CONFIRM_SELL);
+    // Re-cotiza antes de CONFIRM_SELL para garantizar precio fresco
+    await getSellComission();
+    if (!isBlocked.value) {
+      Get.toNamed(AppRoutes.CONFIRM_SELL);
+    }
   }
 
   //? confirm sell
@@ -314,10 +380,17 @@ class SellController extends GetxController
           });
 
           if (res.status != 'success' || res.data == null) {
-            DynamicToast.error(
-              title: 'form.invalidForm_title'.tr,
-              description: res.message,
-            );
+            final code = res.message_code ?? '';
+            if (code == 'TRANSACTION_QUOTATION_ERROR' ||
+                code == 'INVALID_QUOTATION_DATA' ||
+                code == 'QUOTE_EXPIRED') {
+              _showQuoteExpiredDialog();
+            } else {
+              DynamicToast.error(
+                title: 'form.invalidForm_title'.tr,
+                description: res.message,
+              );
+            }
             return;
           }
 

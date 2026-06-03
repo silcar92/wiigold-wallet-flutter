@@ -84,6 +84,30 @@ class SellPage extends GetView<SellController> {
 
         DynamicDivider(height: 10),
 
+        Obx(() {
+          final ttl = controller.quoteTtl.value;
+          if (ttl <= 0) return const SizedBox.shrink();
+          final isLow = ttl <= 10;
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 6,
+            children: [
+              Icon(
+                Icons.timer_outlined,
+                size: 18,
+                color: isLow ? AppColors.failure : AppColors.dark2,
+              ),
+              Text(
+                'Cotización válida por $ttl s',
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  color: isLow ? AppColors.failure : AppColors.dark2,
+                  fontWeight: isLow ? FontWeight.w700 : FontWeight.w500,
+                ),
+              ),
+            ],
+          );
+        }),
+
         DynamicDivider(height: 75),
 
         DynamicButton(

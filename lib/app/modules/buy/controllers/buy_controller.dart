@@ -18,6 +18,7 @@ import 'package:wiigold/app/data/models/response_api_model.dart';
 import 'package:wiigold/app/data/models/responses/balance_model.dart';
 import 'package:wiigold/app/common/widgets/layout/totp_confirm_dialog.dart';
 import 'package:wiigold/app/routers/app_routes.dart';
+import 'package:wiigold/theme/Colors.dart';
 
 //? THEME & IMAGES
 
@@ -273,9 +274,50 @@ class BuyController extends GetxController
     Get.toNamed(AppRoutes.CONFIRM_BUY);
   }
 
-  //? buyConfirmView
+  //? buyConfirmView — re-cotiza antes de avanzar para garantizar precio fresco
   void submitConfirmBuyForm() async {
-    Get.toNamed(AppRoutes.BUY_INFO);
+    showLoading(context: Get.context!);
+    await getBuyComission();
+    dismissLoading(context: Get.context!);
+    if (tesoreryAvailable) {
+      Get.toNamed(AppRoutes.BUY_INFO);
+    }
+  }
+
+  void _showBuyQuoteExpiredDialog() {
+    final context = Get.context!;
+    final textTheme = Theme.of(context).textTheme;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppColors.dark,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'Cotización vencida',
+          textAlign: TextAlign.center,
+          style: textTheme.titleLarge?.copyWith(color: AppColors.light),
+        ),
+        content: Text(
+          'La cotización venció o ya no está disponible. Solicita una nueva cotización para continuar.',
+          textAlign: TextAlign.center,
+          style: textTheme.bodyMedium?.copyWith(color: AppColors.light),
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+              Get.offAllNamed(AppRoutes.BUY);
+            },
+            child: Text(
+              'Nueva cotización',
+              style: textTheme.titleMedium?.copyWith(color: AppColors.main),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   //? buyDataView
@@ -314,10 +356,17 @@ class BuyController extends GetxController
           });
 
           if (res.status != 'success' || res.data == null) {
-            DynamicToast.error(
-              title: 'form.invalidForm_title'.tr,
-              description: res.message,
-            );
+            final code = res.message_code ?? '';
+            if (code == 'TRANSACTION_QUOTATION_ERROR' ||
+                code == 'INVALID_QUOTATION_DATA' ||
+                code == 'QUOTE_EXPIRED') {
+              _showBuyQuoteExpiredDialog();
+            } else {
+              DynamicToast.error(
+                title: 'form.invalidForm_title'.tr,
+                description: res.message,
+              );
+            }
             return;
           }
 

@@ -16,6 +16,7 @@ import 'package:wiigold/app/data/models/responses/balance_model.dart';
 import 'package:wiigold/app/common/widgets/layout/totp_confirm_dialog.dart';
 import 'package:wiigold/app/routers/app_routes.dart';
 import 'package:wiigold/config/environment.dart';
+import 'package:wiigold/theme/Colors.dart';
 
 //? REPOSITORIES
 
@@ -41,6 +42,10 @@ class ExchangeController extends GetxController
 
   Timer? _debounceTimer;
   final Duration _debounceDuration = const Duration(milliseconds: 700);
+
+  Timer? _quoteTimer;
+  final RxInt quoteTtl = 0.obs;   // segundos restantes de la cotización
+  static const int _quoteDuration = 60;
 
   final RxBool isBlocked = false.obs;
 
@@ -191,6 +196,8 @@ class ExchangeController extends GetxController
 
       toAmountController.text = (data['amount_to'] as double)
           .toHauvNumericString();
+
+      _startQuoteTimer();
     } catch (e) {
       print("Error en getExchangeComission: $e");
     } finally {
@@ -198,6 +205,63 @@ class ExchangeController extends GetxController
 
       isBlocked.value = false;
     }
+  }
+
+  void _startQuoteTimer() {
+    _quoteTimer?.cancel();
+    quoteTtl.value = _quoteDuration;
+    _quoteTimer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (quoteTtl.value <= 1) {
+        t.cancel();
+        quoteTtl.value = 0;
+        getExchangeComission(); // auto-refresh al expirar
+      } else {
+        quoteTtl.value--;
+      }
+    });
+  }
+
+  void _showQuoteExpiredDialog() {
+    final context = Get.context!;
+    final textTheme = Theme.of(context).textTheme;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppColors.dark,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'Cotización vencida',
+          textAlign: TextAlign.center,
+          style: textTheme.titleLarge?.copyWith(color: AppColors.light),
+        ),
+        content: Text(
+          'La cotización venció o ya no está disponible. Se solicitará una nueva cotización para continuar.',
+          textAlign: TextAlign.center,
+          style: textTheme.bodyMedium?.copyWith(color: AppColors.light),
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+              Get.offAllNamed(AppRoutes.EXCHANGE);
+            },
+            child: Text(
+              'Nueva cotización',
+              style: textTheme.titleMedium?.copyWith(color: AppColors.main),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void onClose() {
+    _quoteTimer?.cancel();
+    _debounceTimer?.cancel();
+    super.onClose();
   }
 
   void validateExchangeForm() async {
@@ -243,9 +307,16 @@ class ExchangeController extends GetxController
           });
 
           if (res.status != 'success' || res.data == null) {
-            DynamicToast.error(
-              title: res.message ?? 'Ocurrió un error inesperado.',
-            );
+            final code = res.message_code ?? '';
+            if (code == 'TRANSACTION_QUOTATION_ERROR' ||
+                code == 'INVALID_QUOTATION_DATA' ||
+                code == 'QUOTE_EXPIRED') {
+              _showQuoteExpiredDialog();
+            } else {
+              DynamicToast.error(
+                title: res.message ?? 'Ocurrió un error inesperado.',
+              );
+            }
             return;
           }
 
