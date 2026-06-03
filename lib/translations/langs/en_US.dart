@@ -889,6 +889,7 @@ const Map<String, String> enUS = {
   'screens.transaction_detail.controller.status_completed':
       'Transaction Completed!',
   'screens.transaction_detail.controller.status_pending': 'Transaction Pending',
+  'screens.transaction_detail.controller.status_under_review': 'Under Review',
   'screens.transaction_detail.controller.status_failed': 'Transaction Failed',
   'screens.transaction_detail.controller.status_cancelled':
       'Transaction Cancelled',

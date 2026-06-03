@@ -138,6 +138,10 @@ class TransactionDetailController extends GetxController with LoadingMixin {
               'screens.transaction_detail.controller.status_pending'.tr;
           statusColor = AppColors.accent;
           break;
+        case 'funds_held_review':
+          statusText = 'screens.transaction_detail.controller.status_under_review'.tr;
+          statusColor = Colors.orange;
+          break;
         case 'failed':
         case 'rejected':
         case 'error':

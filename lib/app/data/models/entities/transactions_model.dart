@@ -34,12 +34,21 @@ class Transaction {
   });
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
+    final String topStatus = json['status'] as String? ?? 'unknown';
+    final String opType = (json['operationType'] as String? ?? '').toLowerCase();
+    final details = json['details'] as Map<String, dynamic>? ?? {};
+    final String detailStatus = (details['status'] as String? ?? '').toLowerCase();
+
+    // Para onramp, details.status es más granular que el status raíz de Transaction
+    final String effectiveStatus =
+        opType == 'onramp' && detailStatus.isNotEmpty ? detailStatus : topStatus;
+
     return Transaction(
       transactionId: json['transaction_id'] as String,
       date: json['date'] as String,
       time: json['time'] as String,
       operationType: json['operationType'] as String,
-      status: json['status'] as String,
+      status: effectiveStatus,
       details: json['details'] as dynamic,
       fee: (json['fee'] ?? 0.0) as double,
       amount: json['amount'] as double,

@@ -43,7 +43,7 @@ class TransactionStatusBadge extends StatelessWidget {
       case "pending":
         return AppColors.accent;
       case "funds_held_review":
-        return Colors.red;
+        return Colors.orange.shade600;
       case "failed":
       case "rejected":
       case "error":

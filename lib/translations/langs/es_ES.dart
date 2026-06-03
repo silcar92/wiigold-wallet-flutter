@@ -908,6 +908,7 @@ const Map<String, String> esES = {
       '¡Transacción Completada!',
   'screens.transaction_detail.controller.status_pending':
       'Transacción Pendiente',
+  'screens.transaction_detail.controller.status_under_review': 'En Revisión',
   'screens.transaction_detail.controller.status_failed': 'Transacción Fallida',
   'screens.transaction_detail.controller.status_cancelled':
       'Transacción Cancelada',
