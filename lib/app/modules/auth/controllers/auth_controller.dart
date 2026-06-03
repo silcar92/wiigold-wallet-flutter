@@ -279,7 +279,7 @@ class AuthController extends GetxController with LoadingMixin {
 
       dismissLoading();
 
-      Get.offAllNamed(AppRoutes.HOME, parameters: {"viewMode": "finishKYC"});
+      Get.offAllNamed(AppRoutes.KYC_APPROVED);
     });
   }
 

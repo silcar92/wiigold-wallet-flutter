@@ -33,6 +33,7 @@ import 'package:wiigold/app/modules/loan/views/loan_request_view.dart';
 import 'package:wiigold/app/modules/loan/views/loan_selector_view.dart';
 import 'package:wiigold/app/modules/loan/views/loan_view.dart';
 import 'package:wiigold/app/modules/profile/views/data_view.dart';
+import 'package:wiigold/app/modules/profile/views/kyc_approved_view.dart';
 import 'package:wiigold/app/modules/profile/views/kyc_view.dart';
 import 'package:wiigold/app/modules/profile/views/profile_view.dart';
 import 'package:wiigold/app/modules/qr/bindins/qr_bindins.dart';
@@ -365,6 +366,7 @@ class AppPages {
     GetPage(name: AppRoutes.PROFILE, page: () => ProfileView()),
     GetPage(name: AppRoutes.PROFILE_DATA, page: () => DataView()),
     GetPage(name: AppRoutes.PROFILE_KYC, page: () => KycView()),
+    GetPage(name: AppRoutes.KYC_APPROVED, page: () => const KycApprovedView()),
 
     //? Security / 2FA
     GetPage(

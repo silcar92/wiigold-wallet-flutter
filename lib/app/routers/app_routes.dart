@@ -82,6 +82,7 @@ class AppRoutes {
   //? Profile
   static const PROFILE = '/profile';
   static const PROFILE_KYC = '/profile_kyc';
+  static const KYC_APPROVED = '/kyc_approved';
   static const PROFILE_DATA = '/profile_data';
   static const BENEFITS = '/benefits';
   static const SETTINGS = '/settings';

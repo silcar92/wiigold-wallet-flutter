@@ -11,8 +11,10 @@ import 'package:wiigold/app/common/widgets/layout/dynamic_app_scaffold.dart';
 import 'package:wiigold/app/common/widgets/layout/dynamic_divider.dart';
 import 'package:wiigold/app/common/widgets/ui/dynamic_button.dart';
 import 'package:wiigold/app/core/services/drawer/views/drawer_menu_view.dart';
+import 'package:wiigold/app/data/models/constants/kyc_limits.dart';
 import 'package:wiigold/app/modules/auth/controllers/auth_controller.dart';
 import 'package:wiigold/app/modules/profile/controllers/profile_controller.dart';
+import 'package:wiigold/app/modules/profile/widgets/kyc_limits_card.dart';
 import 'package:wiigold/theme/Colors.dart';
 
 class KycView extends GetView<ProfileController> {
@@ -61,6 +63,7 @@ class KycPage extends GetView<ProfileController> {
 
       if (cs == '330') return _buildReviewPage(textTheme);
       if (cs == '350') return _buildRejectedPage(textTheme);
+      if (KycLimits.isApproved(cs)) return _buildApprovedPage(textTheme, cs);
       return _buildVerifyPage(textTheme);
     });
   }
@@ -143,6 +146,35 @@ class KycPage extends GetView<ProfileController> {
             ],
           ),
         ),
+      ],
+    );
+  }
+
+  // E1 — KYC aprobado (340 / KYC_APPROVED_STANDARD / KYC_APPROVED_ENHANCED_LIMITED / EDD_APPROVED)
+  Widget _buildApprovedPage(TextTheme textTheme, String cs) {
+    return Column(
+      spacing: 16,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: Icon(
+            Icons.verified_outlined,
+            size: 64,
+            color: AppColors.success,
+          ),
+        ),
+        DynamicDivider(height: 8),
+        Text(
+          'Cuenta verificada',
+          style: textTheme.displayLarge?.copyWith(height: 1.1),
+        ),
+        Text(
+          'Tu identidad ha sido validada. A continuación puedes ver los límites operativos de tu nivel de verificación actual.',
+          style: textTheme.titleSmall?.copyWith(overflow: TextOverflow.visible),
+        ),
+        DynamicDivider(height: 4),
+        KycLimitsCard(complianceStatus: cs),
       ],
     );
   }
