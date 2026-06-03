@@ -134,7 +134,10 @@ class TransactionDisplayData {
       amount: '$amountSign$amountString',
       token: currencyLabel,
 
-      status: (t['status'] as String? ?? 'unknown').toLowerCase(),
+      // Para onramp, details.status refleja el estado del OnRampRequest (más granular)
+      status: operationType == 'onramp' && (details['status'] as String?)?.isNotEmpty == true
+          ? (details['status'] as String).toLowerCase()
+          : (t['status'] as String? ?? 'unknown').toLowerCase(),
       icon: icon,
       amountColor: amountColor,
       rawData: t,
