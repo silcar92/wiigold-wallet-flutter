@@ -165,12 +165,15 @@ class BuyController extends GetxController
       });
 
       if (res.status == 'error') {
-        DynamicToast.error(title: res.message ?? '');
-
-        if (res.message_code == 'ONRAMP_INSUFFICIENT_TREASURY_TOKENS') {
-          tesoreryAvailable = false;
+        final code = res.message_code ?? '';
+        if (code == 'EDD_REQUIRED' || code == 'PENDING_ADDITIONAL_INFO') {
+          _showKycLimitDialog();
+        } else {
+          DynamicToast.error(title: res.message ?? '');
+          if (code == 'ONRAMP_INSUFFICIENT_TREASURY_TOKENS') {
+            tesoreryAvailable = false;
+          }
         }
-
         return;
       }
 
@@ -284,6 +287,39 @@ class BuyController extends GetxController
     }
   }
 
+  void _showKycLimitDialog() {
+    final context = Get.context!;
+    final textTheme = Theme.of(context).textTheme;
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (_) => AlertDialog(
+        backgroundColor: AppColors.dark,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          'Operación no permitida',
+          textAlign: TextAlign.center,
+          style: textTheme.titleLarge?.copyWith(color: AppColors.light),
+        ),
+        content: Text(
+          'Esta operación supera los límites de tu nivel de verificación. Para ampliar tus límites escríbenos a soporte@hauvtrading.com.',
+          textAlign: TextAlign.center,
+          style: textTheme.bodyMedium?.copyWith(color: AppColors.light),
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: Text(
+              'Entendido',
+              style: textTheme.titleMedium?.copyWith(color: AppColors.main),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showBuyQuoteExpiredDialog() {
     final context = Get.context!;
     final textTheme = Theme.of(context).textTheme;
@@ -357,7 +393,9 @@ class BuyController extends GetxController
 
           if (res.status != 'success' || res.data == null) {
             final code = res.message_code ?? '';
-            if (code == 'TRANSACTION_QUOTATION_ERROR' ||
+            if (code == 'EDD_REQUIRED' || code == 'PENDING_ADDITIONAL_INFO') {
+              _showKycLimitDialog();
+            } else if (code == 'TRANSACTION_QUOTATION_ERROR' ||
                 code == 'INVALID_QUOTATION_DATA' ||
                 code == 'QUOTE_EXPIRED') {
               _showBuyQuoteExpiredDialog();

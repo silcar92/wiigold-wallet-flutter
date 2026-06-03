@@ -26,7 +26,7 @@ class KycLimits {
   static const Map<String, String> _numericToTier = {
     '300': 'REGISTERED_RESTRICTED',
     '310': 'REGISTERED_RESTRICTED',
-    '320': 'REGISTERED_RESTRICTED',
+    '320': 'KYC_APPROVED_STANDARD',
     '340': 'KYC_APPROVED_STANDARD',
     // Pass-through para códigos string directos
     'REGISTERED_RESTRICTED': 'REGISTERED_RESTRICTED',
@@ -87,6 +87,7 @@ class KycLimits {
   static bool isApproved(String? status) {
     if (status == null) return false;
     const approvedCodes = {
+      '320',
       '340',
       'KYC_APPROVED_STANDARD',
       'KYC_APPROVED_ENHANCED_LIMITED',
